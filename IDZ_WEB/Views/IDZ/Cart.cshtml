@@ -1,0 +1,35 @@
+﻿@model IDZ_WEB.Models.ViewModels.Cart
+@{
+    ViewBag.Title = "Корзина";
+}
+
+<h2>Корзина</h2>
+<table style="width:90%">
+    @if (Model.productsList.Count() > 0)
+    {
+        <tbody>
+            @foreach (var product in Model.productsList)
+            {
+                <tr class="text-center">
+                    <td>
+                        @product.name
+                        (@{Html.RenderAction("Prices"
+                                             , new { product_id = product.product_id });})
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tbody>
+            @Html.ActionLink("Оплатить", "BuyProducts", "IDZ"
+                                               , new { guid = Model.purchaseID }, null)
+        </tbody>
+    }
+    else
+    {
+        <tr class="text-center">
+            <td>
+                Корзина пуста!
+            </td>
+        </tr>
+    }
+</table>

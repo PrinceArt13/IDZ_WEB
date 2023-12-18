@@ -1,0 +1,22 @@
+﻿@model List<IDZ_WEB.Models.categories>
+@{
+    ViewBag.Title = "Категории товаров";
+}
+
+<h2>Категории</h2>
+<table style="width:90%;margin:50px 20px">
+    <tbody>
+        @foreach (var category in Model)
+        {
+            { Html.RenderPartial("CategoriesOverviewPartial", category); }
+        }
+    </tbody>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+<tbody>
+    @Html.ActionLink("Добавить категорию", "CreateCategory", "IDZ", new { @class = "btn btn-defualt btn-primary" })
+    @Html.ActionLink("Добавить товар", "CreateProduct", "IDZ", new { @class = "btn btn-defualt btn-primary" })
+    @Html.ActionLink("Добавить производителя", "CreateManufacturer", "IDZ", new { @class = "btn btn-defualt btn-primary" })
+</tbody>
+    }
+</table>

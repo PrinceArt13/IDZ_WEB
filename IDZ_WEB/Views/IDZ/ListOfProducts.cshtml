@@ -1,0 +1,72 @@
+﻿@model List<IDZ_WEB.Models.products>
+
+<h2>Товары</h2>
+<table style="width:90%">
+    <tbody>
+        @foreach (var product in Model)
+        {
+        <tr class="text-center">
+            <td>
+                @product.name
+                (@{Html.RenderAction("Prices"
+                      , new { product_id = product.product_id });})
+            </td>
+            @if (User.IsInRole("Participant"))
+            {
+                <td>
+                    <div class="btn addToCart btn-primary" data-guid="@product.product_id">
+                        <span>
+                            Купить
+                        </span>
+                    </div>
+                </td>
+            }
+            else if (User.IsInRole("Admin"))
+            {
+                <td>
+                    @Html.ActionLink("Изменить", "EditProduct", "IDZ"
+                      , new { productID = product.product_id }, null)
+                </td>
+                <td>
+                    @Html.ActionLink("Удалить", "DeleteProduct", "IDZ"
+                      , new { productID = product.product_id }, null)
+                </td>
+            }
+            else
+            {
+                <td>
+                    @Html.ActionLink("Купить", "Login")
+                </td>
+            }
+        </tr>
+        }
+    </tbody>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+    <tbody>
+        @Html.ActionLink("Добавить товар", "CreateProduct", "IDZ", new { @class = "btn btn-defualt btn-primary" })
+    </tbody>
+    }
+</table>
+
+<script>
+    window.onload = function () {
+
+        var buttons = document.getElementsByClassName('addToCart');
+        console.log(buttons);
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener("click", () => AddToCart(buttons[i].dataset.guid));
+        }
+    } 
+    function AddToCart(guid)
+    {
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("AddToCart","IDZ")",
+            data: {guid: guid},
+            success: function (data) {
+                alert("Добавлено в корзину");
+            }
+        });
+    }
+</script>

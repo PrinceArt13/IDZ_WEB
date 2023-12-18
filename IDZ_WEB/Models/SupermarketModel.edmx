@@ -1,0 +1,697 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище SupermarketModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="cashiers">
+          <Key>
+            <PropertyRef Name="cashier_id" />
+          </Key>
+          <Property Name="cashier_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="first_name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="last_name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="categories">
+          <Key>
+            <PropertyRef Name="category_id" />
+          </Key>
+          <Property Name="category_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="discount_cards">
+          <Key>
+            <PropertyRef Name="card_id" />
+          </Key>
+          <Property Name="card_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="discount" Type="float" Nullable="false" />
+          <Property Name="user_id" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="manufacturers">
+          <Key>
+            <PropertyRef Name="manufacturer_id" />
+          </Key>
+          <Property Name="manufacturer_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="price_change">
+          <Key>
+            <PropertyRef Name="price_id" />
+          </Key>
+          <Property Name="price_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="product_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="date_price_change" Type="date" Nullable="false" />
+          <Property Name="price" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="products">
+          <Key>
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="product_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="manufacturer_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="category_id" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="purchase">
+          <Key>
+            <PropertyRef Name="purchase_id" />
+          </Key>
+          <Property Name="purchase_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="date" Type="date" />
+          <Property Name="cashier_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="discount_card_id" Type="uniqueidentifier" />
+          <Property Name="cash_register_number" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="purchase_item">
+          <Key>
+            <PropertyRef Name="purchase_id" />
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="purchase_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="product_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="count" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleCode" />
+          </Key>
+          <Property Name="RoleCode" Type="int" Nullable="false" />
+          <Property Name="RoleName" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Login" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PasswordHash" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Salt" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="UserRole" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "8I11_PrintsevAA.dbo.cheque" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="cheque">
+          <Key>
+            <PropertyRef Name="наименование" />
+            <PropertyRef Name="количество" />
+            <PropertyRef Name="Дата" />
+          </Key>
+          <Property Name="номер чека" Type="bigint" />
+          <Property Name="наименование" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="количество" Type="int" Nullable="false" />
+          <Property Name="Скидка" Type="float" />
+          <Property Name="Цена" Type="float" />
+          <Property Name="Дата" Type="date" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_2">
+          <End Role="categories" Type="Self.categories" Multiplicity="1" />
+          <End Role="products" Type="Self.products" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="categories">
+              <PropertyRef Name="category_id" />
+            </Principal>
+            <Dependent Role="products">
+              <PropertyRef Name="category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_3">
+          <End Role="manufacturers" Type="Self.manufacturers" Multiplicity="1" />
+          <End Role="products" Type="Self.products" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="manufacturers">
+              <PropertyRef Name="manufacturer_id" />
+            </Principal>
+            <Dependent Role="products">
+              <PropertyRef Name="manufacturer_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_4">
+          <End Role="cashiers" Type="Self.cashiers" Multiplicity="1" />
+          <End Role="purchase" Type="Self.purchase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cashiers">
+              <PropertyRef Name="cashier_id" />
+            </Principal>
+            <Dependent Role="purchase">
+              <PropertyRef Name="cashier_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_5">
+          <End Role="discount_cards" Type="Self.discount_cards" Multiplicity="0..1" />
+          <End Role="purchase" Type="Self.purchase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="discount_cards">
+              <PropertyRef Name="card_id" />
+            </Principal>
+            <Dependent Role="purchase">
+              <PropertyRef Name="discount_card_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_6">
+          <End Role="products" Type="Self.products" Multiplicity="1" />
+          <End Role="purchase_item" Type="Self.purchase_item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="products">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="purchase_item">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_7">
+          <End Role="purchase" Type="Self.purchase" Multiplicity="1" />
+          <End Role="purchase_item" Type="Self.purchase_item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="purchase">
+              <PropertyRef Name="purchase_id" />
+            </Principal>
+            <Dependent Role="purchase_item">
+              <PropertyRef Name="purchase_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_discount_cards_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="discount_cards" Type="Self.discount_cards" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="discount_cards">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_price_change_products">
+          <End Role="products" Type="Self.products" Multiplicity="1" />
+          <End Role="price_change" Type="Self.price_change" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="products">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="price_change">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleCode" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="UserRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="AddProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="productName" Type="varchar" Mode="In" />
+          <Parameter Name="category" Type="varchar" Mode="In" />
+          <Parameter Name="price" Type="int" Mode="In" />
+          <Parameter Name="manufacturer" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="Хранилище SupermarketModelContainer">
+          <EntitySet Name="cashiers" EntityType="Self.cashiers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="categories" EntityType="Self.categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="discount_cards" EntityType="Self.discount_cards" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="manufacturers" EntityType="Self.manufacturers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="price_change" EntityType="Self.price_change" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="products" EntityType="Self.products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="purchase" EntityType="Self.purchase" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="purchase_item" EntityType="Self.purchase_item" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cheque" EntityType="Self.cheque" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [cheque].[номер чека] AS [номер чека], 
+    [cheque].[наименование] AS [наименование], 
+    [cheque].[количество] AS [количество], 
+    [cheque].[Скидка] AS [Скидка], 
+    [cheque].[Цена] AS [Цена], 
+    [cheque].[Дата] AS [Дата]
+    FROM [dbo].[cheque] AS [cheque]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_2" Association="Self.FK_2">
+            <End Role="categories" EntitySet="categories" />
+            <End Role="products" EntitySet="products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_3" Association="Self.FK_3">
+            <End Role="manufacturers" EntitySet="manufacturers" />
+            <End Role="products" EntitySet="products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_4" Association="Self.FK_4">
+            <End Role="cashiers" EntitySet="cashiers" />
+            <End Role="purchase" EntitySet="purchase" />
+          </AssociationSet>
+          <AssociationSet Name="FK_5" Association="Self.FK_5">
+            <End Role="discount_cards" EntitySet="discount_cards" />
+            <End Role="purchase" EntitySet="purchase" />
+          </AssociationSet>
+          <AssociationSet Name="FK_6" Association="Self.FK_6">
+            <End Role="products" EntitySet="products" />
+            <End Role="purchase_item" EntitySet="purchase_item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_7" Association="Self.FK_7">
+            <End Role="purchase" EntitySet="purchase" />
+            <End Role="purchase_item" EntitySet="purchase_item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_discount_cards_User" Association="Self.FK_discount_cards_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="discount_cards" EntitySet="discount_cards" />
+          </AssociationSet>
+          <AssociationSet Name="FK_price_change_products" Association="Self.FK_price_change_products">
+            <End Role="products" EntitySet="products" />
+            <End Role="price_change" EntitySet="price_change" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Role" Association="Self.FK_User_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SupermarketModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="cashiers">
+          <Key>
+            <PropertyRef Name="cashier_id" />
+          </Key>
+          <Property Name="cashier_id" Type="Guid" Nullable="false" />
+          <Property Name="first_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="last_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="purchase" Relationship="Self.FK_4" FromRole="cashiers" ToRole="purchase" />
+        </EntityType>
+        <EntityType Name="categories">
+          <Key>
+            <PropertyRef Name="category_id" />
+          </Key>
+          <Property Name="category_id" Type="Guid" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="products" Relationship="Self.FK_2" FromRole="categories" ToRole="products" />
+        </EntityType>
+        <EntityType Name="discount_cards">
+          <Key>
+            <PropertyRef Name="card_id" />
+          </Key>
+          <Property Name="card_id" Type="Guid" Nullable="false" />
+          <Property Name="discount" Type="Double" Nullable="false" />
+          <Property Name="user_id" Type="Guid" />
+          <NavigationProperty Name="purchase" Relationship="Self.FK_5" FromRole="discount_cards" ToRole="purchase" />
+          <NavigationProperty Name="User" Relationship="Self.FK_discount_cards_User" FromRole="discount_cards" ToRole="User" />
+        </EntityType>
+        <EntityType Name="manufacturers">
+          <Key>
+            <PropertyRef Name="manufacturer_id" />
+          </Key>
+          <Property Name="manufacturer_id" Type="Guid" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="products" Relationship="Self.FK_3" FromRole="manufacturers" ToRole="products" />
+        </EntityType>
+        <EntityType Name="price_change">
+          <Key>
+            <PropertyRef Name="price_id" />
+          </Key>
+          <Property Name="price_id" Type="Guid" Nullable="false" />
+          <Property Name="product_id" Type="Guid" Nullable="false" />
+          <Property Name="date_price_change" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="price" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="products" Relationship="Self.FK_price_change_products" FromRole="price_change" ToRole="products" />
+        </EntityType>
+        <EntityType Name="products">
+          <Key>
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="product_id" Type="Guid" Nullable="false" />
+          <Property Name="manufacturer_id" Type="Guid" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="category_id" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="categories" Relationship="Self.FK_2" FromRole="products" ToRole="categories" />
+          <NavigationProperty Name="manufacturers" Relationship="Self.FK_3" FromRole="products" ToRole="manufacturers" />
+          <NavigationProperty Name="price_change" Relationship="Self.FK_price_change_products" FromRole="products" ToRole="price_change" />
+          <NavigationProperty Name="purchase_item" Relationship="Self.FK_6" FromRole="products" ToRole="purchase_item" />
+        </EntityType>
+        <EntityType Name="purchase">
+          <Key>
+            <PropertyRef Name="purchase_id" />
+          </Key>
+          <Property Name="purchase_id" Type="Guid" Nullable="false" />
+          <Property Name="date" Type="DateTime" Precision="0" />
+          <Property Name="cashier_id" Type="Guid" Nullable="false" />
+          <Property Name="discount_card_id" Type="Guid" />
+          <Property Name="cash_register_number" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="cashiers" Relationship="Self.FK_4" FromRole="purchase" ToRole="cashiers" />
+          <NavigationProperty Name="discount_cards" Relationship="Self.FK_5" FromRole="purchase" ToRole="discount_cards" />
+          <NavigationProperty Name="purchase_item" Relationship="Self.FK_7" FromRole="purchase" ToRole="purchase_item" />
+        </EntityType>
+        <EntityType Name="purchase_item">
+          <Key>
+            <PropertyRef Name="purchase_id" />
+            <PropertyRef Name="product_id" />
+          </Key>
+          <Property Name="purchase_id" Type="Guid" Nullable="false" />
+          <Property Name="product_id" Type="Guid" Nullable="false" />
+          <Property Name="count" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="products" Relationship="Self.FK_6" FromRole="purchase_item" ToRole="products" />
+          <NavigationProperty Name="purchase" Relationship="Self.FK_7" FromRole="purchase_item" ToRole="purchase" />
+        </EntityType>
+        <EntityType Name="Role">
+          <Key>
+            <PropertyRef Name="RoleCode" />
+          </Key>
+          <Property Name="RoleCode" Type="Int32" Nullable="false" />
+          <Property Name="RoleName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_User_Role" FromRole="Role" ToRole="User" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Guid" Nullable="false" />
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Salt" Type="Guid" Nullable="false" />
+          <Property Name="UserRole" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="discount_cards" Relationship="Self.FK_discount_cards_User" FromRole="User" ToRole="discount_cards" />
+          <NavigationProperty Name="Role" Relationship="Self.FK_User_Role" FromRole="User" ToRole="Role" />
+        </EntityType>
+        <EntityType Name="cheque">
+          <Key>
+            <PropertyRef Name="наименование" />
+            <PropertyRef Name="количество" />
+            <PropertyRef Name="Дата" />
+          </Key>
+          <Property Name="номер_чека" Type="Int64" />
+          <Property Name="наименование" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="количество" Type="Int32" Nullable="false" />
+          <Property Name="Скидка" Type="Double" />
+          <Property Name="Цена" Type="Double" />
+          <Property Name="Дата" Type="DateTime" Nullable="false" Precision="0" />
+        </EntityType>
+        <Association Name="FK_4">
+          <End Role="cashiers" Type="Self.cashiers" Multiplicity="1" />
+          <End Role="purchase" Type="Self.purchase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cashiers">
+              <PropertyRef Name="cashier_id" />
+            </Principal>
+            <Dependent Role="purchase">
+              <PropertyRef Name="cashier_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_2">
+          <End Role="categories" Type="Self.categories" Multiplicity="1" />
+          <End Role="products" Type="Self.products" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="categories">
+              <PropertyRef Name="category_id" />
+            </Principal>
+            <Dependent Role="products">
+              <PropertyRef Name="category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_5">
+          <End Role="discount_cards" Type="Self.discount_cards" Multiplicity="0..1" />
+          <End Role="purchase" Type="Self.purchase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="discount_cards">
+              <PropertyRef Name="card_id" />
+            </Principal>
+            <Dependent Role="purchase">
+              <PropertyRef Name="discount_card_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_discount_cards_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="discount_cards" Type="Self.discount_cards" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="discount_cards">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_3">
+          <End Role="manufacturers" Type="Self.manufacturers" Multiplicity="1" />
+          <End Role="products" Type="Self.products" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="manufacturers">
+              <PropertyRef Name="manufacturer_id" />
+            </Principal>
+            <Dependent Role="products">
+              <PropertyRef Name="manufacturer_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_price_change_products">
+          <End Role="products" Type="Self.products" Multiplicity="1" />
+          <End Role="price_change" Type="Self.price_change" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="products">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="price_change">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_6">
+          <End Role="products" Type="Self.products" Multiplicity="1" />
+          <End Role="purchase_item" Type="Self.purchase_item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="products">
+              <PropertyRef Name="product_id" />
+            </Principal>
+            <Dependent Role="purchase_item">
+              <PropertyRef Name="product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_7">
+          <End Role="purchase" Type="Self.purchase" Multiplicity="1" />
+          <End Role="purchase_item" Type="Self.purchase_item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="purchase">
+              <PropertyRef Name="purchase_id" />
+            </Principal>
+            <Dependent Role="purchase_item">
+              <PropertyRef Name="purchase_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Role">
+          <End Role="Role" Type="Self.Role" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Role">
+              <PropertyRef Name="RoleCode" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="UserRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SupermarketEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="cashiers" EntityType="Self.cashiers" />
+          <EntitySet Name="categories" EntityType="Self.categories" />
+          <EntitySet Name="discount_cards" EntityType="Self.discount_cards" />
+          <EntitySet Name="manufacturers" EntityType="Self.manufacturers" />
+          <EntitySet Name="price_change" EntityType="Self.price_change" />
+          <EntitySet Name="products" EntityType="Self.products" />
+          <EntitySet Name="purchase" EntityType="Self.purchase" />
+          <EntitySet Name="purchase_item" EntityType="Self.purchase_item" />
+          <EntitySet Name="Role" EntityType="Self.Role" />
+          <EntitySet Name="User" EntityType="Self.User" />
+          <EntitySet Name="cheque" EntityType="Self.cheque" />
+          <AssociationSet Name="FK_4" Association="Self.FK_4">
+            <End Role="cashiers" EntitySet="cashiers" />
+            <End Role="purchase" EntitySet="purchase" />
+          </AssociationSet>
+          <AssociationSet Name="FK_2" Association="Self.FK_2">
+            <End Role="categories" EntitySet="categories" />
+            <End Role="products" EntitySet="products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_5" Association="Self.FK_5">
+            <End Role="discount_cards" EntitySet="discount_cards" />
+            <End Role="purchase" EntitySet="purchase" />
+          </AssociationSet>
+          <AssociationSet Name="FK_discount_cards_User" Association="Self.FK_discount_cards_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="discount_cards" EntitySet="discount_cards" />
+          </AssociationSet>
+          <AssociationSet Name="FK_3" Association="Self.FK_3">
+            <End Role="manufacturers" EntitySet="manufacturers" />
+            <End Role="products" EntitySet="products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_price_change_products" Association="Self.FK_price_change_products">
+            <End Role="products" EntitySet="products" />
+            <End Role="price_change" EntitySet="price_change" />
+          </AssociationSet>
+          <AssociationSet Name="FK_6" Association="Self.FK_6">
+            <End Role="products" EntitySet="products" />
+            <End Role="purchase_item" EntitySet="purchase_item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_7" Association="Self.FK_7">
+            <End Role="purchase" EntitySet="purchase" />
+            <End Role="purchase_item" EntitySet="purchase_item" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Role" Association="Self.FK_User_Role">
+            <End Role="Role" EntitySet="Role" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <FunctionImport Name="AddProduct">
+            <Parameter Name="productName" Mode="In" Type="String" />
+            <Parameter Name="category" Mode="In" Type="String" />
+            <Parameter Name="price" Mode="In" Type="Int32" />
+            <Parameter Name="manufacturer" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище SupermarketModelContainer" CdmEntityContainer="SupermarketEntities">
+          <EntitySetMapping Name="cashiers">
+            <EntityTypeMapping TypeName="SupermarketModel.cashiers">
+              <MappingFragment StoreEntitySet="cashiers">
+                <ScalarProperty Name="cashier_id" ColumnName="cashier_id" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="last_name" ColumnName="last_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="categories">
+            <EntityTypeMapping TypeName="SupermarketModel.categories">
+              <MappingFragment StoreEntitySet="categories">
+                <ScalarProperty Name="category_id" ColumnName="category_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="discount_cards">
+            <EntityTypeMapping TypeName="SupermarketModel.discount_cards">
+              <MappingFragment StoreEntitySet="discount_cards">
+                <ScalarProperty Name="card_id" ColumnName="card_id" />
+                <ScalarProperty Name="discount" ColumnName="discount" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="manufacturers">
+            <EntityTypeMapping TypeName="SupermarketModel.manufacturers">
+              <MappingFragment StoreEntitySet="manufacturers">
+                <ScalarProperty Name="manufacturer_id" ColumnName="manufacturer_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="price_change">
+            <EntityTypeMapping TypeName="SupermarketModel.price_change">
+              <MappingFragment StoreEntitySet="price_change">
+                <ScalarProperty Name="price_id" ColumnName="price_id" />
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+                <ScalarProperty Name="date_price_change" ColumnName="date_price_change" />
+                <ScalarProperty Name="price" ColumnName="price" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="products">
+            <EntityTypeMapping TypeName="SupermarketModel.products">
+              <MappingFragment StoreEntitySet="products">
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+                <ScalarProperty Name="manufacturer_id" ColumnName="manufacturer_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="category_id" ColumnName="category_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="purchase">
+            <EntityTypeMapping TypeName="SupermarketModel.purchase">
+              <MappingFragment StoreEntitySet="purchase">
+                <ScalarProperty Name="purchase_id" ColumnName="purchase_id" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="cashier_id" ColumnName="cashier_id" />
+                <ScalarProperty Name="discount_card_id" ColumnName="discount_card_id" />
+                <ScalarProperty Name="cash_register_number" ColumnName="cash_register_number" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="purchase_item">
+            <EntityTypeMapping TypeName="SupermarketModel.purchase_item">
+              <MappingFragment StoreEntitySet="purchase_item">
+                <ScalarProperty Name="purchase_id" ColumnName="purchase_id" />
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+                <ScalarProperty Name="count" ColumnName="count" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Role">
+            <EntityTypeMapping TypeName="SupermarketModel.Role">
+              <MappingFragment StoreEntitySet="Role">
+                <ScalarProperty Name="RoleCode" ColumnName="RoleCode" />
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="SupermarketModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="Salt" ColumnName="Salt" />
+                <ScalarProperty Name="UserRole" ColumnName="UserRole" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cheque">
+            <EntityTypeMapping TypeName="SupermarketModel.cheque">
+              <MappingFragment StoreEntitySet="cheque">
+                <ScalarProperty Name="номер_чека" ColumnName="номер чека" />
+                <ScalarProperty Name="наименование" ColumnName="наименование" />
+                <ScalarProperty Name="количество" ColumnName="количество" />
+                <ScalarProperty Name="Скидка" ColumnName="Скидка" />
+                <ScalarProperty Name="Цена" ColumnName="Цена" />
+                <ScalarProperty Name="Дата" ColumnName="Дата" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="AddProduct" FunctionName="Хранилище SupermarketModel.AddProduct" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

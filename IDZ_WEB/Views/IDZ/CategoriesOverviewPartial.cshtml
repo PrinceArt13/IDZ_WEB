@@ -1,0 +1,7 @@
+﻿@model IDZ_WEB.Models.categories
+<tr class="text-center">
+    <td>
+        @Html.ActionLink(Model.name, "ListOfProducts", "IDZ"
+       , new {categoryID = Model.category_id }, null)
+    </td>
+</tr>
